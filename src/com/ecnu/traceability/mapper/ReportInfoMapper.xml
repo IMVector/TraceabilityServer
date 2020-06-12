@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecnu.traceability.mapper.ReportInfoMapper">
+	<resultMap id="ReportInfoResultMap"
+		type="com.ecnu.traceability.entity.ReportInfo">
+		<id column="Id" property="id" />
+		<result column="MacAddress" property="macaddress" />
+		<result column="Date" property="date" />
+	</resultMap>
+
+	<select id="getReportInfoByMacAddress"
+		parameterType="java.lang.String" resultMap="ReportInfoResultMap">
+		select *
+		from reportinfo
+		where MacAddress = #{macAddress}
+	</select>
+	<insert id="addReportInfo"
+		parameterType="com.ecnu.traceability.entity.ReportInfo">
+		insert into reportinfo (Id, MacAddress, Date,
+		Description)
+		values (#{id},#{macaddress},#{date},#{description})
+	</insert>
+
+</mapper>

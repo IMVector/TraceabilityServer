@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecnu.traceability.mapper.UserMapper">
+	<resultMap id="UserResultMap"
+		type="com.ecnu.traceability.entity.User">
+		<id column="Id" property="id" />
+		<result column="MacAddress" property="macaddress" />
+		<result column="DeviceId" property="deviceid" />
+		<result column="Flag" property="flag" />
+	</resultMap>
+
+	<select id="getUserByMacAddress"
+		parameterType="java.lang.String" resultMap="UserResultMap">
+		select *
+		from userinfo
+		where
+		MacAddress = #{macAddress}
+	</select>
+	<select id="getPatientMacAddress"
+		parameterType="java.lang.String" resultType="java.lang.String">
+		select MACADDRESS
+		from
+		userinfo
+		where
+		FLAG ='false'
+	</select>
+	<select id="getPatientUser" resultMap="UserResultMap">
+		select *
+		from userinfo
+		where
+		FLAG ='false'
+	</select>
+
+	<insert id="addUser"
+		parameterType="com.ecnu.traceability.entity.User">
+		insert into userinfo (Id, MacAddress, DeviceId, Flag)
+		values (#{id}, #{macaddress},
+		#{deviceid}, #{flag})
+	</insert>
+	<update id="updateUser"
+		parameterType="com.ecnu.traceability.entity.User">
+		update userinfo
+		set MacAddress = #{macaddress},
+		DeviceId =
+		#{deviceid},
+		Flag = #{flag}
+		where MacAddress = #{macaddress}
+	</update>
+</mapper>

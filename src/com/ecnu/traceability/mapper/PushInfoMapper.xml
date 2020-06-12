@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecnu.traceability.mapper.PushInfoMapper">
+	<resultMap id="PushInfoResultMap"
+		type="com.ecnu.traceability.entity.PushInfo">
+		<id column="UserMAC" property="usermac" />
+		<id column="PatientMAC" property="patientmac" />
+		<result column="Date" property="date" />
+	</resultMap>
+	<insert id="addPushInfo"
+		parameterType="com.ecnu.traceability.entity.PushInfo">
+		insert into pushinfo (UserMAC, PatientMAC, Date)
+		values
+		(#{usermac}, #{patientmac},
+		#{date})
+	</insert>
+
+	<select id="getPushInfoByUserMacAddress"
+		parameterType="java.lang.String" resultMap="PushInfoResultMap">
+		select *from pushinfo
+		where
+		UserMAC = #{usermac}
+	</select>
+	
+	<select id="getPushInfoByUserAndPatientMacAddress"
+		parameterType="java.lang.String" resultMap="PushInfoResultMap">
+		select *from pushinfo
+		where
+		UserMAC = #{0} and PatientMac=#{1}
+	</select>
+	
+	<select id="getPushInfoByPatientMacAddress"
+		parameterType="java.lang.String" resultMap="PushInfoResultMap">
+		select *from pushinfo
+		where
+		PatientMAC = #{patientmac}
+	</select>
+</mapper>
