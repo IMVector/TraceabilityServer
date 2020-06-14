@@ -3,36 +3,38 @@
 <mapper namespace="com.ecnu.traceability.mapper.PushInfoMapper">
 	<resultMap id="PushInfoResultMap"
 		type="com.ecnu.traceability.entity.PushInfo">
-		<id column="UserMAC" property="usermac" />
-		<id column="PatientMAC" property="patientmac" />
+		<id column="Id" property="id"/>
+		<result column="UserMAC" property="usermac" />
+		<result column="PatientMAC" property="patientmac" />
 		<result column="Date" property="date" />
+		<result column="Disease" property="disease" />
 	</resultMap>
 	<insert id="addPushInfo"
 		parameterType="com.ecnu.traceability.entity.PushInfo">
-		insert into pushinfo (UserMAC, PatientMAC, Date)
+		insert into pushinfo (UserMAC, PatientMAC, Date,Disease)
 		values
 		(#{usermac}, #{patientmac},
-		#{date})
+		#{date},#{disease})
 	</insert>
 
 	<select id="getPushInfoByUserMacAddress"
 		parameterType="java.lang.String" resultMap="PushInfoResultMap">
 		select *from pushinfo
 		where
-		UserMAC = #{usermac}
+		UserMAC = #{usermac} order by Date desc
 	</select>
 	
 	<select id="getPushInfoByUserAndPatientMacAddress"
 		parameterType="java.lang.String" resultMap="PushInfoResultMap">
 		select *from pushinfo
 		where
-		UserMAC = #{0} and PatientMac=#{1}
+		UserMAC = #{0} and PatientMac=#{1} order by Date desc
 	</select>
 	
 	<select id="getPushInfoByPatientMacAddress"
 		parameterType="java.lang.String" resultMap="PushInfoResultMap">
 		select *from pushinfo
 		where
-		PatientMAC = #{patientmac}
+		PatientMAC = #{patientmac} order by Date desc
 	</select>
 </mapper>

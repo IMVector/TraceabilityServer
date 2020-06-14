@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!-- was: <?xml version="1.0" encoding="UTF-8"?> -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
@@ -22,9 +21,10 @@
 
 
 	<!-- 定时任务 -->
-	<!-- <task:executor id="executor" pool-size="5" /> <task:scheduler id="scheduler" 
-		pool-size="10" /> <task:annotation-driven executor="executor" scheduler="scheduler" 
-		/> -->
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="10" />
+	<task:annotation-driven executor="executor"
+		scheduler="scheduler" />
 
 	<!-- 配置文件 -->
 	<context:property-placeholder
@@ -45,7 +45,8 @@
 		<!-- 配置数据源 -->
 		<property name="dataSource" ref="dataSource" />
 		<!-- 配置类型别名采用包扫描 -->
-		<property name="typeAliasesPackage" value="com.ecnu.traceability.entity" />
+		<property name="typeAliasesPackage"
+			value="com.ecnu.traceability.entity" />
 		<!-- 配置SQL语句映射文件 -->
 		<property name="mapperLocations"
 			value="classpath:com/ecnu/traceability/mapper/*.xml"></property>
@@ -72,7 +73,8 @@
 		默认是类名 首字母小写 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 设置包名 -->
-		<property name="basePackage" value="com.ecnu.traceability.mapper" />
+		<property name="basePackage"
+			value="com.ecnu.traceability.mapper" />
 		<!-- 设置SqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName"
 			value="sqlSessionFactory" />

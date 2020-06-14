@@ -1,10 +1,11 @@
 package com.ecnu.traceability.controller;
 
 import java.security.KeyStore.Entry;
-import java.sql.Date;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecnu.traceability.entity.LocationInfo;
+import com.ecnu.traceability.entity.PatientDetail;
+import com.ecnu.traceability.entity.PushInfo;
 import com.ecnu.traceability.entity.ReportInfo;
 import com.ecnu.traceability.entity.TransportationInfo;
 import com.ecnu.traceability.entity.User;
 import com.ecnu.traceability.service.LocationService;
+import com.ecnu.traceability.service.PatientDetailService;
 import com.ecnu.traceability.service.PushInfoService;
 import com.ecnu.traceability.service.ReportInfoService;
 import com.ecnu.traceability.service.TransportationService;
@@ -48,6 +52,9 @@ public class MController {
 	@Autowired
 	private TransportationService transportationService;
 
+	@Autowired
+	private PatientDetailService patientDetailService;
+
 	private boolean pushFlag = false;
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
@@ -66,7 +73,34 @@ public class MController {
 		return userService
 				.addUser(new User(models.get("macAddress").toString(), models.get("deviceId").toString(), flag));
 	}
-	//≤‚ ‘
+
+	@RequestMapping(value = "/tel/add", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean addPatientTel(@RequestBody Map<String, Object> models) throws ParseException {
+		String telphone = (String) models.get("telephone");
+		String macAddress = (String) models.get("macAddress");
+		Boolean flag = models.get("flag").equals("true") ? true : false;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		java.util.Date date = sdf.parse((String) models.get("date"));
+
+		return patientDetailService.addPatientDetail(new PatientDetail(telphone, macAddress, flag, date));
+	}
+
+	// œÚÕ∆ÀÕ–≈œ¢±ÌÃÌº”“—æ≠Õ∆ÀÕµƒº«¬º
+	@RequestMapping(value = "/pushedinfo/add", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean addPushedInfo(@RequestBody Map<String, Object> models) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String patientMacAddress = (String) models.get("patientMacAddress");
+		String userMacAddress = (String) models.get("userMacAddress");
+		String date_ = (String) models.get("date");
+		String disease = (String) models.get("disease");
+		Date date = sdf.parse(date_);
+		PushInfo pushInfo = new PushInfo(userMacAddress, patientMacAddress, date, disease);
+		return pushInfoService.addPushInfo(pushInfo);
+	}
+
+	// ≤‚ ‘
 	@RequestMapping(value = "/addLocationInfo", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
 	@ResponseBody
 	public boolean addLocationInfo(@RequestBody JSONObject json) {
@@ -74,7 +108,7 @@ public class MController {
 		List<LocationInfo> locationList = new ArrayList<LocationInfo>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
 				LocationInfo locInfo = new LocationInfo(obj.getString("macAddress"), obj.getString("latitude"),
 						obj.getString("longitude"), sdf.parse(obj.getString("date")));
@@ -93,7 +127,7 @@ public class MController {
 		List<ReportInfo> reportList = new ArrayList<ReportInfo>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
 				ReportInfo reportInfo = new ReportInfo(obj.getString("macAddress"), obj.getString("description"),
 						sdf.parse(obj.getString("date")));
@@ -112,10 +146,10 @@ public class MController {
 		List<TransportationInfo> transportationInfoList = new ArrayList<TransportationInfo>();
 		for (int i = 0; i < array.size(); i++) {
 			JSONObject obj = array.getJSONObject(i);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			try {
 				TransportationInfo transportationInfo = new TransportationInfo(obj.getString("macAddress"),
-						obj.getString("type"),  obj.getString("No"),obj.getString("seat"),
+						obj.getString("type"), obj.getString("No"), obj.getString("seat"),
 						sdf.parse(obj.getString("date")));
 				transportationInfoList.add(transportationInfo);
 			} catch (ParseException e) {
@@ -130,37 +164,37 @@ public class MController {
 	public List<String> queryPatient() {
 		return userService.getPatientMacAddress();
 	}
-	
-	
-	//≤‚ ‘
+
+	// ≤‚ ‘
 	@RequestMapping(value = "/getLocationInfo/{userMACAddress}/{patientMACAddress}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<LocationInfo> queryPatientLocationInfo(@PathVariable String userMACAddress,
 			@PathVariable String patientMACAddress) {
-		return locationService.getGPSLocationListByMacAddress(patientMACAddress);
+		return locationService.getGPSLocationListByMacAddress(patientMACAddress, userMACAddress);
 	}
-	//≤‚ ‘
+
+	// ≤‚ ‘
 	@RequestMapping(value = "/getReportInfo/{userMACAddress}/{patientMACAddress}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ReportInfo> queryPatientReportInfo(@PathVariable String userMACAddress,
 			@PathVariable String patientMACAddress) {
 		return reportInfoService.getReportInfoByMacAddress(patientMACAddress);
 	}
-	//≤‚ ‘
+
+	// ≤‚ ‘
 	@RequestMapping(value = "/getTransportationinfo/{userMACAddress}/{patientMACAddress}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<TransportationInfo> queryPatientTransportationinfo(@PathVariable String userMACAddress,
 			@PathVariable String patientMACAddress) {
-		return transportationService.getTranpostationIndoByMacAddress(patientMACAddress);
+		return transportationService.getTranpostationIndoByMacAddress(patientMACAddress, userMACAddress);
 	}
 
-	//≤‚ ‘
+	// ≤‚ ‘
 	@RequestMapping(value = "/isPushed/{userMACAddress}/{patientMACAddress}", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean queryPushInfo(@PathVariable String userMACAddress,
-			@PathVariable String patientMACAddress) {
-		System.out.println(userMACAddress+"\t"+patientMACAddress);
-		return pushInfoService.isPushed(userMACAddress,patientMACAddress);
+	public boolean queryPushInfo(@PathVariable String userMACAddress, @PathVariable String patientMACAddress) {
+		System.out.println(userMACAddress + "\t" + patientMACAddress);
+		return pushInfoService.isPushed(userMACAddress, patientMACAddress);
 	}
 
 }

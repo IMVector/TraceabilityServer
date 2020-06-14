@@ -12,18 +12,21 @@ import com.ecnu.traceability.mapper.PushInfoMapper;
 
 @Transactional
 @Service
-public class PushInfoService {
+public class PushInfoService extends JudgeIsPushed {
 
 	@Autowired
 	private PushInfoMapper pushInfoDao;
 
 	public boolean addPushInfo(PushInfo pushInfo) {
-		try {
-			pushInfoDao.addPushInfo(pushInfo);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (!isPushed(pushInfo.getPatientmac(), pushInfo.getUsermac())) {
+			try {
+				pushInfoDao.addPushInfo(pushInfo);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
+
 		return false;
 	}
 
@@ -37,12 +40,4 @@ public class PushInfoService {
 
 	}
 
-	public boolean isPushed(String userMACAddress, String patientMACAddress) {
-		List<PushInfo> pushInfoList = pushInfoDao.getPushInfoByUserAndPatientMacAddress(userMACAddress,
-				patientMACAddress);
-		if (null != pushInfoList && pushInfoList.size() > 0) {
-			return true;
-		}
-		return false;
-	}
 }
