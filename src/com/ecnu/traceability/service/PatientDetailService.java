@@ -27,7 +27,7 @@ public class PatientDetailService {
 		if (!isAdded(detail)) {
 			try {
 				patientDetailDao.addPatientDetail(detail);
-				// ¸üĞÂÓÃ»§µÄ×´Ì¬
+				// æ›´æ–°ç”¨æˆ·çš„çŠ¶æ€
 				User user = userDao.getUserByMacAddress(detail.getMacAddress());
 				user.setFlag(false);
 				userDao.updateUser(user);
@@ -40,7 +40,7 @@ public class PatientDetailService {
 		return false;
 	}
 
-	// Ã¿30·ÖÖÓÖ´ĞĞÒ»´Î
+	// æ¯30åˆ†é’Ÿæ‰§è¡Œä¸€æ¬¡
 	@Scheduled(cron = "0 */60 * * * ?")
 	public void sendEmailToStaff() {
 		List<PatientDetail> list = patientDetailDao.getPatientDetail();
@@ -49,7 +49,7 @@ public class PatientDetailService {
 			for (PatientDetail detail : list) {
 				System.out.println("=======================================");
 				String phone = detail.getTelephone();
-				String content = "ÊÖ»úºÅÂëÎª " + phone + " µÄÓÃ»§,·çÏÕ½Ï¸ß£¬ÇëÓëÆäÁªÏµ";
+				String content = "æ‰‹æœºå·ç ä¸º " + phone + " çš„ç”¨æˆ·,é£é™©è¾ƒé«˜ï¼Œè¯·ä¸å…¶è”ç³»";
 				Email.sendEmail("1769326712@qq.com", content);
 				try {
 					detail.setFlag(true);

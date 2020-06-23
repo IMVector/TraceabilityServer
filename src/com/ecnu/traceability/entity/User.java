@@ -7,7 +7,16 @@ public class User {
 
 	private String deviceid;
 
+	private String tel;
+
 	private Boolean flag;
+
+	public User(String macaddress, String deviceid, String tel, Boolean flag) {
+		this.macaddress = macaddress;
+		this.deviceid = deviceid;
+		this.tel = tel;
+		this.flag = flag;
+	}
 
 	public User(Integer id, String macaddress, String deviceid, Boolean flag) {
 		this.id = id;
@@ -25,6 +34,17 @@ public class User {
 	public User() {
 		super();
 	}
+
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+
 
 	public Integer getId() {
 		return id;

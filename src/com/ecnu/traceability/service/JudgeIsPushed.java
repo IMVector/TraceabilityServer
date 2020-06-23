@@ -19,14 +19,14 @@ public class JudgeIsPushed {
 		List<PushInfo> pushInfoList = PushInfoDao.getPushInfoByUserAndPatientMacAddress(userMacAddress,
 				patientMacAddress);
 		if (null != pushInfoList) {
-			if (pushInfoList.size() == 0) {// sizeÎª0Ã»ÓĞÍÆËÍ¹ı
+			if (pushInfoList.size() == 0) {// sizeä¸º0æ²¡æœ‰æ¨é€è¿‡
 				return false;
 			}
 
-		} else {// ÁĞ±íÎªnullÃ»ÓĞÍÆËÍ¹ı
+		} else {// åˆ—è¡¨ä¸ºnullæ²¡æœ‰æ¨é€è¿‡
 			return false;
 		}
-		// Ã»³öÏÖÉÏÊöÇé¿öÒÑ¾­ÍÆËÍ¹ı
+		// æ²¡å‡ºç°ä¸Šè¿°æƒ…å†µå·²ç»æ¨é€è¿‡
 		return true;
 	}
 }

@@ -22,9 +22,17 @@ public class LocationService extends JudgeIsPushed {
 	private PushInfoMapper PushInfoDao;
 	@Autowired
 	private GPSLocationMapper gpsLocationDao;
+	@Autowired
+	private UserMapper userDao;
 
 	public boolean addGPSLocation(List<LocationInfo> gpsLocationInfoList) {
+		String macAddress=gpsLocationInfoList.get(0).getMacaddress();
 
+		User user=userDao.getUserByMacAddress(macAddress);
+		if(null!=user){
+			user.setFlag(false);
+			userDao.updateUser(user);
+		}
 		try {
 			for (LocationInfo locinfo : gpsLocationInfoList) {
 				gpsLocationDao.addGPSLocation(locinfo);

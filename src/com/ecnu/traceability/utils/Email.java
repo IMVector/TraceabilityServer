@@ -16,7 +16,7 @@ public class Email {
 	public static boolean sendEmail(String to, String content) {
 		boolean flag = false;
 
-		final String from = "@qq.com";
+		final String from = "*@qq.com";
 		final String password = "";
 
 		// ָ�������ʼ�������Ϊ smtp.qq.com

@@ -17,7 +17,7 @@ public class TransportationService extends JudgeIsPushed {
 	@Autowired
 	private TransportationInfoMapper transportationDao;
 
-	//ÉÏ´«²¡ÈËµÄ³Ë³µĞÅÏ¢
+	//ä¸Šä¼ ç—…äººçš„ä¹˜è½¦ä¿¡æ¯
 	public boolean addTranpostationInfo(List<TransportationInfo> tranportationInfoList) {
 		try {
 			for (TransportationInfo info : tranportationInfoList) {
@@ -30,7 +30,7 @@ public class TransportationService extends JudgeIsPushed {
 		return false;
 	}
 
-	//ÍÆËÍ²¡ÈËµÄ³Ë³µĞÅÏ¢
+	//æ¨é€ç—…äººçš„ä¹˜è½¦ä¿¡æ¯
 	public List<TransportationInfo> getTranpostationIndoByMacAddress(String patientMacAddress, String userMacAddress) {
 		if (!isPushed(patientMacAddress, userMacAddress)) {
 			return transportationDao.getTranpostationIndoByMacAddress(patientMacAddress);

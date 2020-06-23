@@ -9,6 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ecnu.traceability.entity.PushInfo;
 import com.ecnu.traceability.entity.TransportationInfo;
 import com.ecnu.traceability.mapper.PushInfoMapper;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 @Transactional
 @Service
@@ -18,6 +24,9 @@ public class PushInfoService extends JudgeIsPushed {
 	private PushInfoMapper pushInfoDao;
 
 	public boolean addPushInfo(PushInfo pushInfo) {
+
+
+
 		if (!isPushed(pushInfo.getPatientmac(), pushInfo.getUsermac())) {
 			try {
 				pushInfoDao.addPushInfo(pushInfo);

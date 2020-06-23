@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 /.settings
+.project
+.classpath
+.settings
+.idea
