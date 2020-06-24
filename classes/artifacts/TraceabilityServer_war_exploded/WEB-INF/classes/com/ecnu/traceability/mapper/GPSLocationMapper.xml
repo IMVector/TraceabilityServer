@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ecnu.traceability.mapper.GPSLocationMapper">
+	<resultMap id="LocationInfoResultMap"
+		type="com.ecnu.traceability.entity.LocationInfo">
+		<id column="Id" jdbcType="INTEGER" property="id" />
+		<result column="MacAddress" property="macaddress" />
+		<result column="Longitude" property="longitude" />
+		<result column="Latitude" property="latitude" />
+		<result column="Date" property="date" />
+	</resultMap>
+
+	<!-- 查看个人信息 -->
+	<select id="getGPSLocationListByMacAddress"
+		parameterType="java.lang.String" resultMap="LocationInfoResultMap"
+		resultType="com.ecnu.traceability.entity.LocationInfo">
+		SELECT *
+		FROM locationinfo
+		WHERE MacAddress = #{macAddress}
+	</select>
+
+	<insert id="addGPSLocation"
+		parameterType="com.ecnu.traceability.entity.LocationInfo">
+		insert into locationinfo
+		(Id, MacAddress, Longitude,
+		Latitude, Date)
+		values (#{id}, #{macaddress}, #{longitude},
+		#{latitude}, #{date})
+	</insert>
+
+
+</mapper>

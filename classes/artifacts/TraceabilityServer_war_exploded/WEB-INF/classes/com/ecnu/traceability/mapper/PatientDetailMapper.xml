@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ecnu.traceability.mapper.PatientDetailMapper">
+	<resultMap type="com.ecnu.traceability.entity.PatientDetail"
+		id="PatientDetailResultMap">
+		<id column="Id" jdbcType="INTEGER" property="id" />
+		<result column="Telephone" property="telephone" />
+		<result column="MacAddress" property="macAddress" />
+		<result column="Flag" property="flag" />
+		<result column="Date" property="date" />
+	</resultMap>
+
+	<insert id="addPatientDetail"
+		parameterType="com.ecnu.traceability.entity.PatientDetail">
+		insert into patientdetail (Telephone, MacAddress, Flag,
+		Date)
+		values
+		(#{telephone}, #{macAddress},
+		#{flag},#{date})
+	</insert>
+
+	<update id="updatePatientDetail"
+		parameterType="com.ecnu.traceability.entity.PatientDetail">
+		UPDATE patientdetail SET Telephone = #{telephone}, MacAddress = #{macAddress}, Flag = #{flag}, Date = #{date} WHERE id = #{id}
+	</update>
+
+	<select id="getPatientDetail" resultMap="PatientDetailResultMap">
+		select *from
+		patientdetail
+		where
+		Flag = '0'
+	</select>
+
+	<select id="getPatientDetailByMac"
+		parameterType="java.lang.String" resultMap="PatientDetailResultMap">
+		select *from
+		patientdetail
+		where
+		MacAddress = #{patientMac}
+	</select>
+
+	<select id="getPatientDetailByTel"
+		parameterType="java.lang.String" resultMap="PatientDetailResultMap">
+		select *from
+		patientdetail
+		where
+		Telephone = #{telephone}
+	</select>
+</mapper>

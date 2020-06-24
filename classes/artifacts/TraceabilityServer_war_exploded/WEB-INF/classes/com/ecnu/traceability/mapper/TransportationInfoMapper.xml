@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ecnu.traceability.mapper.TransportationInfoMapper">
+	<resultMap id="TransportationInfoResultMap"
+		type="com.ecnu.traceability.entity.TransportationInfo">
+		<id column="Id" property="id" />
+		<result column="MacAddress" property="macaddress" />
+		<result column="Type" property="type" />
+		<result column="NO" property="no" />
+		<result column="Seat" property="seat" />
+		<result column="Date" property="date" />
+	</resultMap>
+	<select id="getTranpostationIndoByMacAddress"
+		parameterType="java.lang.String"
+		resultMap="TransportationInfoResultMap">
+		select *
+		from transportationinfo
+		where MacAddress =
+		#{macAddress}
+	</select>
+	<insert id="addTranpostationInfo"
+		parameterType="com.ecnu.traceability.entity.TransportationInfo">
+		insert into transportationinfo (Id, MacAddress, Type,
+		NO, Seat, Date)
+		values (#{id},#{macaddress},#{type},#{no},#{seat},
+		#{date})
+	</insert>
+
+</mapper>

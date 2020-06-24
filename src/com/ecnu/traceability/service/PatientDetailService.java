@@ -19,8 +19,8 @@ public class PatientDetailService {
 	@Autowired
 	private PatientDetailMapper patientDetailDao;
 
-	@Autowired
-	private UserMapper userDao;
+//	@Autowired
+//	private UserMapper userDao;
 
 	public boolean addPatientDetail(PatientDetail detail) {
 
@@ -28,9 +28,9 @@ public class PatientDetailService {
 			try {
 				patientDetailDao.addPatientDetail(detail);
 				// 更新用户的状态
-				User user = userDao.getUserByMacAddress(detail.getMacAddress());
-				user.setFlag(false);
-				userDao.updateUser(user);
+//				User user = userDao.getUserByMacAddress(detail.getMacAddress());
+//				user.setFlag(false);
+//				userDao.updateUser(user);
 				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -43,7 +43,7 @@ public class PatientDetailService {
 	// 每30分钟执行一次
 	@Scheduled(cron = "0 */60 * * * ?")
 	public void sendEmailToStaff() {
-		List<PatientDetail> list = patientDetailDao.getPatientDetail();
+		List<PatientDetail> list = patientDetailDao.getPatientDetail();//查找flag=false的病人用户
 //		
 		if (null != list) {
 			for (PatientDetail detail : list) {
@@ -64,9 +64,9 @@ public class PatientDetailService {
 	public boolean isAdded(PatientDetail detail) {
 		PatientDetail dbDetail = patientDetailDao.getPatientDetailByMac(detail.getMacAddress());
 		if (null == dbDetail) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 }
