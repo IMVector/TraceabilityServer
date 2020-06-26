@@ -20,7 +20,7 @@ public class LocationInfo {
 	}
 
 
-	public LocationInfo(String macaddress, String longitude, String latitude, Date date) {
+	public LocationInfo(String macaddress,String latitude,  String longitude, Date date) {
 		this.macaddress = macaddress;
 		this.longitude = longitude;
 		this.latitude = latitude;
@@ -28,7 +28,7 @@ public class LocationInfo {
 	}
     
 
-	public LocationInfo(Integer id, String macaddress, String longitude, String latitude, Date date) {
+	public LocationInfo(Integer id, String macaddress,String latitude, String longitude,  Date date) {
 		this.id = id;
 		this.macaddress = macaddress;
 		this.longitude = longitude;

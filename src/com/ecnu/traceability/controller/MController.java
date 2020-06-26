@@ -68,6 +68,7 @@ public class MController {
         System.out.println("------------------------------------");
         ModelMap map = new ModelMap();
         map.put("abc", "测试成功");
+        // machineLearningService.federatedAverage();
         machineLearningService.trainModel();
         //machineLearningService.pullModelFormClient();
         return map;
@@ -78,7 +79,7 @@ public class MController {
     public boolean addUser(@RequestBody Map<String, Object> models) {
         Boolean flag = models.get("flag").equals("true") ? true : false;
         return userService
-                .addUser(new User(models.get("macAddress").toString(), models.get("deviceId").toString(), models.get("tel").toString(),flag));
+                .addUser(new User(models.get("macAddress").toString(), models.get("deviceId").toString(), models.get("tel").toString(), flag));
     }
 
     @RequestMapping(value = "/tel/add", method = RequestMethod.POST)
@@ -217,7 +218,7 @@ public class MController {
         System.out.println("==================模型已经上传==================");
         String showPath = "";
         try {
-            showPath = UploadUtil.uploadFile(request,macAddress.replaceAll(":","_"));
+            showPath = UploadUtil.uploadFile(request, macAddress.replaceAll(":", "_"));
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -43,3 +43,8 @@ res/dataset/WISDM_ar_train1.csv
 res/model/trained_har_nn_updated.zip
 res/model/trained_har_nn.zip
 .classpath
+genData.py
+classes/artifacts/TraceabilityServer_war_exploded/clients_model/originModel.zip
+classes/artifacts/TraceabilityServer_war_exploded/clients_model/originModel1.zip
+*.war
+classes/

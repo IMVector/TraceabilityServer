@@ -8,8 +8,8 @@
 		type="com.ecnu.traceability.entity.LocationInfo">
 		<id column="Id" jdbcType="INTEGER" property="id" />
 		<result column="MacAddress" property="macaddress" />
-		<result column="Longitude" property="longitude" />
 		<result column="Latitude" property="latitude" />
+		<result column="Longitude" property="longitude" />
 		<result column="Date" property="date" />
 	</resultMap>
 
@@ -25,10 +25,10 @@
 	<insert id="addGPSLocation"
 		parameterType="com.ecnu.traceability.entity.LocationInfo">
 		insert into locationinfo
-		(Id, MacAddress, Longitude,
-		Latitude, Date)
-		values (#{id}, #{macaddress}, #{longitude},
-		#{latitude}, #{date})
+		(Id, MacAddress, Latitude,Longitude,
+		 Date)
+		values (#{id}, #{macaddress}, #{latitude}, #{longitude},
+		#{date})
 	</insert>
 
 

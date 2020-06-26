@@ -1,5 +1,7 @@
 package com.ecnu.traceability.service;
 
+import com.ecnu.traceability.entity.PatientDetail;
+import com.ecnu.traceability.utils.Email;
 import junit.framework.TestListener;
 import org.datavec.api.records.reader.RecordReader;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
@@ -25,6 +27,7 @@ import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -165,7 +168,7 @@ public class MachineLearningService {
         int seed = 100;
         double learningRate = 0.001;
         int batchSize = 10;
-        int nEpochs = 100;
+        int nEpochs = 1000;
 
         int numInputs = 6;
         int numOutputs = 3;
@@ -281,5 +284,23 @@ public class MachineLearningService {
         public String toString() {
             return "ScoreIterationListener(" + this.printIterations + ")";
         }
+    }
+
+
+    // 每24小时执行一次
+    @Scheduled(cron = "0 0 0 1/1 * ?")
+    public void federatedCombine() {
+
+        if (!initFlag) {
+            init();
+        }
+
+        File dir = new File(clientsModelPath);//加载用户的模型
+        File[] listOfFiles = dir.listFiles();
+
+        if(listOfFiles.length>2){
+            federatedAverage();
+        }
+
     }
 }

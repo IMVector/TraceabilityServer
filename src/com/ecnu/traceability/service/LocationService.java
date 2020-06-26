@@ -49,6 +49,7 @@ public class LocationService extends JudgeIsPushed {
 		if (!isPushed(patientMacAddress, userMacAddress)) {
 			return gpsLocationDao.getGPSLocationListByMacAddress(patientMacAddress);
 		} else {
+			System.out.println("===========================error===================");
 			return new ArrayList<LocationInfo>();
 		}
 	}
