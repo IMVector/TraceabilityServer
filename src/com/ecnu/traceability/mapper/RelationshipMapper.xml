@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ecnu.traceability.mapper.RelationshipMapper">
+    <resultMap id="RelationshipResultMap"
+               type="com.ecnu.traceability.entity.Relationship">
+        <id column="Id" property="id"/>
+        <result column="OriginMac" property="originMac"/>
+        <result column="TargetMac" property="targetMac"/>
+        <result column="Date" property="date"/>
+        <result column="Flag" property="flag"/>
+    </resultMap>
+
+    <select id="getRelationshipList" resultMap="RelationshipResultMap">
+		select *
+		from relationship
+	</select>
+    <select id="getRelationshipByOriginMac" parameterType="java.lang.String" resultMap="RelationshipResultMap">
+		select *
+		from relationship
+		where OriginMac=#{mac}
+	</select>
+    <select id="getRelationshipByTargetMac" parameterType="java.lang.String" resultMap="RelationshipResultMap">
+		select *
+		from relationship
+		where TargetMac=#{mac}
+	</select>
+    <select id="getRelationshipByMac" parameterType="java.lang.String" resultMap="RelationshipResultMap">
+		select *
+		from relationship
+		where OriginMac=#{0} and TargetMac=#{1}
+	</select>
+    <insert id="addRelationship"
+            parameterType="com.ecnu.traceability.entity.Relationship">
+		insert into relationship (Id, OriginMac, TargetMac,
+		Date,Flag)
+		values (#{id},#{originMac},#{targetMac},#{date},#{flag})
+	</insert>
+    <update id="updateRelationship" parameterType="com.ecnu.traceability.entity.Relationship">
+		update relationship set
+		OriginMac = #{originMac},
+		TargetMac =#{targetMac},
+		Date=#{date},
+		Flag = #{flag}
+		where id = #{id}
+
+	</update>
+
+</mapper>

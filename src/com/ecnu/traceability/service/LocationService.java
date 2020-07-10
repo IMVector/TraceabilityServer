@@ -3,6 +3,7 @@ package com.ecnu.traceability.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecnu.traceability.one_net.OneNETDevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,42 +19,44 @@ import com.ecnu.traceability.mapper.UserMapper;
 @Service
 public class LocationService extends JudgeIsPushed {
 
-	@Autowired
-	private PushInfoMapper PushInfoDao;
-	@Autowired
-	private GPSLocationMapper gpsLocationDao;
-	@Autowired
-	private UserMapper userDao;
+    @Autowired
+    private PushInfoMapper PushInfoDao;
+    @Autowired
+    private GPSLocationMapper gpsLocationDao;
+    @Autowired
+    private UserMapper userDao;
 
-	public boolean addGPSLocation(List<LocationInfo> gpsLocationInfoList) {
-		String macAddress=gpsLocationInfoList.get(0).getMacaddress();
+    public boolean addGPSLocation(List<LocationInfo> gpsLocationInfoList) {
+        if (null != gpsLocationInfoList && gpsLocationInfoList.size() > 0) {
+            String macAddress = gpsLocationInfoList.get(0).getMacaddress();
+            String deviceId = userDao.getDeviceIdOfUser(macAddress);
+            OneNETDevice.pushMapTraceData(deviceId, gpsLocationInfoList);
+            User user = userDao.getUserByMacAddress(macAddress);
+            if (null != user) {
+                user.setFlag(false);
+                userDao.updateUser(user);
+            }
+        }
+        try {
+            for (LocationInfo locinfo : gpsLocationInfoList) {
+                gpsLocationDao.addGPSLocation(locinfo);
+            }
 
-		User user=userDao.getUserByMacAddress(macAddress);
-		if(null!=user){
-			user.setFlag(false);
-			userDao.updateUser(user);
-		}
-		try {
-			for (LocationInfo locinfo : gpsLocationInfoList) {
-				gpsLocationDao.addGPSLocation(locinfo);
-			}
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	public List<LocationInfo> getGPSLocationListByMacAddress(String patientMacAddress, String userMacAddress) {
-		if (!isPushed(patientMacAddress, userMacAddress)) {
-			return gpsLocationDao.getGPSLocationListByMacAddress(patientMacAddress);
-		} else {
-			System.out.println("===========================error===================");
-			return new ArrayList<LocationInfo>();
-		}
-	}
-
+    public List<LocationInfo> getGPSLocationListByMacAddress(String patientMacAddress, String userMacAddress) {
+        if (!isPushed(patientMacAddress, userMacAddress)) {
+            return gpsLocationDao.getGPSLocationListByMacAddress(patientMacAddress);
+        } else {
+            System.out.println("===========================error===================");
+            return new ArrayList<LocationInfo>();
+        }
+    }
 
 
 }

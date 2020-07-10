@@ -6,16 +6,16 @@ import java.security.KeyStore.Entry;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.ecnu.traceability.entity.*;
+import com.ecnu.traceability.one_net.OneNETDevice;
 import com.ecnu.traceability.service.*;
+import com.ecnu.traceability.utils.Email;
 import com.ecnu.traceability.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,17 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ecnu.traceability.entity.LocationInfo;
-import com.ecnu.traceability.entity.PatientDetail;
-import com.ecnu.traceability.entity.PushInfo;
-import com.ecnu.traceability.entity.ReportInfo;
-import com.ecnu.traceability.entity.TransportationInfo;
-import com.ecnu.traceability.entity.User;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class MController {
@@ -60,6 +55,11 @@ public class MController {
     @Autowired
     private MachineLearningService machineLearningService;
 
+    @Autowired
+    private RelationshipService relationshipService;
+
+    @Autowired OneNETService oneNETService;
+
     private boolean pushFlag = false;
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
@@ -76,7 +76,7 @@ public class MController {
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
     @ResponseBody
-    public boolean addUser(@RequestBody Map<String, Object> models) {
+    public String addUser(@RequestBody Map<String, Object> models) {
         Boolean flag = models.get("flag").equals("true") ? true : false;
         return userService
                 .addUser(new User(models.get("macAddress").toString(), models.get("deviceId").toString(), models.get("tel").toString(), flag));
@@ -107,6 +107,102 @@ public class MController {
         PushInfo pushInfo = new PushInfo(userMacAddress, patientMacAddress, date, disease);
         return pushInfoService.addPushInfo(pushInfo);
     }
+
+
+    @RequestMapping(value = "/relationshipList/add", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean addRelationship(@RequestBody JSONObject json) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        JSONArray array = json.getJSONArray("data");
+        List<Relationship> relationshipList = new ArrayList<Relationship>();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject obj = array.getJSONObject(i);
+            String originMac = obj.getString("originMac");
+            String targetMac = obj.getString("targetMac");
+            String date_ = obj.getString("date");
+            int flag = (int) obj.get("flag");
+            Date date = sdf.parse(date_);
+            Relationship relationship = new Relationship(originMac, targetMac, date, flag);
+            relationshipList.add(relationship);
+        }
+
+        return relationshipService.addRelationshipList(relationshipList);
+    }
+
+    // 测试
+    @RequestMapping(value = "/getRelationship", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Relationship> getRelationship() {
+        return relationshipService.getRelationship();
+    }
+
+    // 测试
+    @RequestMapping(value = "/getRelationshipByMac", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelMap getRelationship(HttpSession session) {
+        String mac = (String) session.getAttribute("mac");
+        ModelMap map = new ModelMap();
+        map.addAttribute("list", relationshipService.getRelationship());
+        map.addAttribute("mac", mac);
+        return map;
+    }
+
+    @RequestMapping("/gotoRelationshipDetail/{mac}")
+    public String goToPatientIndex(@PathVariable String mac, HttpSession session) {
+        session.setAttribute("mac", mac);
+        return "homePage";
+    }
+
+    @RequestMapping(value = "/addPieChartData", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
+    @ResponseBody
+    public boolean addPieChartData(@RequestBody JSONObject json) {
+        String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
+        if (null != deviceId) {
+            try {
+                OneNETDevice.pushPieChartData(deviceId, json.getJSONArray("datastreams"));
+                return true;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @RequestMapping(value = "/addBarChartData", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
+    @ResponseBody
+    public boolean addBarChartData(@RequestBody JSONObject json) {
+        String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
+        if (null != deviceId) {
+            try {
+                OneNETDevice.pushBarChartData(deviceId, json.getJSONArray("datastreams"));
+                return true;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @RequestMapping(value = "/addRealtimeLocation", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
+    @ResponseBody
+    public boolean addRealtimeLocation(@RequestBody JSONObject json) {
+        String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
+        if (null != deviceId) {
+           JSONObject obj= json.getJSONObject("datastreams");
+            oneNETService.addLocation(deviceId,obj);
+            //  OneNETDevice.pushRealTimeLocation(deviceId, json.getJSONArray("datastreams"));
+//            realTimeLocationMap.put(deviceId, json.getJSONObject("datastreams"));
+            return true;
+        }
+        return false;
+    }
+
+
 
     // 测试
     @RequestMapping(value = "/addLocationInfo", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")

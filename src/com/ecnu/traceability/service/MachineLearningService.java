@@ -213,15 +213,17 @@ public class MachineLearningService {
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
-        model.setListeners(new TestListener(10));  //Print score every 10 parameter updates
+        model.setListeners(new TestListener(100));  //Print score every 10 parameter updates
 
         model.fit(trainIter, nEpochs);
 
         boolean saveUpdate = true;
 
         File locationToSave = new File(originModel);
+        File locationToSaveUpdate = new File(updatedModel);
 
         ModelSerializer.writeModel(model, locationToSave, saveUpdate);
+        ModelSerializer.writeModel(model, locationToSaveUpdate, saveUpdate);
         System.out.println("机器学习过程已完成");
         System.out.println("machine learning process complete!");
 
@@ -257,7 +259,7 @@ public class MachineLearningService {
 
     private class TestListener  extends BaseTrainingListener implements Serializable {
         private final Logger log = LoggerFactory.getLogger(ScoreIterationListener.class);
-        private int printIterations = 10;
+        private int printIterations = 100;
 
         public TestListener(int printIterations) {
             this.printIterations = printIterations;

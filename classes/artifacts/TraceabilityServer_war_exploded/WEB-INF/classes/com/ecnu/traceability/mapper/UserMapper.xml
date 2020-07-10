@@ -25,6 +25,9 @@
 		where
 		FLAG ='false'
 	</select>
+    <select id="getDeviceIdOfUser" parameterType="java.lang.String" resultType="java.lang.String">
+		select DeviceId FROM userinfo where MacAddress=#{macAddress}
+    </select>
     <select id="getPatientUser" resultMap="UserResultMap">
 		select *
 		from userinfo

@@ -8,15 +8,17 @@ import com.ecnu.traceability.entity.User;
 
 @Repository
 public interface UserMapper {
-	
-	public void addUser(User user);
-	
-	public void updateUser(User user);
 
-	public User getUserByMacAddress(String macAddress);
+    public void addUser(User user);
 
-	public List<String> getPatientMacAddress();
-	
-	public List<User> getPatientUser();
+    public void updateUser(User user);
+
+    public User getUserByMacAddress(String macAddress);
+
+    public List<String> getPatientMacAddress();
+
+    public List<User> getPatientUser();
+
+    public String getDeviceIdOfUser(String macAddress);
 
 }
