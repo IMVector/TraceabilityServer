@@ -37,14 +37,118 @@
         }
 
     </script>
+    <style type="text/css">
+        button {
+            width: 150px;
+            padding:8px;
+            background-color: #428bca;
+            border-color: #357ebd;
+            color: #fff;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px; /* future proofing */
+            -khtml-border-radius: 10px; /* for old Konqueror browsers */
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            font-weight: 900;
+            font-size:125%
+        }
+        a {
+            width: 150px;
+            padding:8px;
+            background-color: #428bca;
+            border-color: #357ebd;
+            color: #fff;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px; /* future proofing */
+            -khtml-border-radius: 10px; /* for old Konqueror browsers */
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            font-weight: 900;
+            font-size:125%
+        }
+    </style>
 </head>
 
-<body>
-<div id="main" style="width: 1536px;height: 900px;"></div>
+<body style="background-color: #0B1532">
+<div style="float:right">
+<%--    <button id="oneNetBtn">查看OneNET分析</button>--%>
+<%--    <br>--%>
+<%--    <br>--%>
+<%--    <br>--%>
+    <button id="traceAnalyse">分析所有患者的轨迹信息</button>
+    <br>
+    <br>
+    <br>
+    <a href="https://open.iot.10086.cn/view/main/#/share2d?id=5f3cd4dfaf150b0036a98839">患者信息分析</a>
+    <br>
+    <br>
+    <br>
+    <a href="https://open.iot.10086.cn/view/main/#/share2d?id=5f051201dab9fa003668837e">隔离信息展示</a>
+    <br>
+    <br>
+    <br>
+    <a href="https://open.iot.10086.cn/view/main/#/share2d?id=5f3cb657af150b0036a9881f">&nbsp&nbsp&nbsp隔离管理&nbsp&nbsp&nbsp</a>
+
+<%--    <button>患者信息分析</button>--%>
+<%--    <button>隔离信息展示</button>--%>
+<%--    <button>隔离管理</button>--%>
+</div>
+
+<div id="main" style="width: 1536px;height: 900px;margin: 0 auto;background-color: #ffffff;border: 1px solid #0E5CAD;border-radius: 10px;"></div>
+<img src="resources/image/tenor.gif" style="display: none">
+<%--<img src="resources/image/tenor.gif">--%>
 
 </body>
 </html>
 <script>
+    //在页面未加载完毕之前显示的loading Html自定义内容
+    var _LoadingHtml = '<div id="loadingDiv" style="display: none; ">' +
+        '<div id="over" style=" position: absolute;top: 0;left: 0; width: 100%;height: 100%; ' +
+        'background-color: #f5f5f5;opacity:0.5;z-index: 1000;"></div>' +
+        '<div id="layout" style="position: absolute;top: 40%; left: 40%;width: 20%; height: 20%;  ' +
+        'z-index: 1001;text-align:center;"><img src="resources/image/tenor.gif" /></div></div>';
+    //呈现loading效果
+    document.write(_LoadingHtml);
+
+    //移除loading效果
+    function completeLoading() {
+        document.getElementById("loadingDiv").style.display="none";
+    }
+    //展示loading效果
+    function showLoading()
+    {
+        document.getElementById("loadingDiv").style.display="block";
+    }
+    $("#oneNetBtn").click(function () {
+        var url = "https://open.iot.10086.cn/view/#/projects"
+        window.open(url, '_blank')
+    });
+
+    $("#traceAnalyse").click(function(){
+        showLoading();
+
+        $.ajax({
+            url: "testDataMining",
+            type: "GET",
+            data: {},
+            async: true,
+            success: function(data){
+
+                //进行业务逻辑的处理
+                completeLoading();
+            },
+            error: function (req, status, error) {
+                //进行业务逻辑的处理
+                completeLoading();
+                console.log(error);
+            }
+        });
+    });
+
     var url = "getRelationship";
     getSomethingByAjax(url, parseData);
 

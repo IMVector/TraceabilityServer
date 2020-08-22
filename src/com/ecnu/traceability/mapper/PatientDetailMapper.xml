@@ -32,6 +32,10 @@
 		where
 		Flag = '0'
 	</select>
+	<select id="getAllPatientDetail" resultMap="PatientDetailResultMap">
+		select *from
+		patientdetail
+	</select>
 
 	<select id="getPatientDetailByMac"
 		parameterType="java.lang.String" resultMap="PatientDetailResultMap">

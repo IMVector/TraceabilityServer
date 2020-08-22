@@ -1,7 +1,9 @@
 package com.ecnu.traceability.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.ecnu.traceability.one_net.OneNETDevice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,8 @@ public class PatientDetailService {
 	@Autowired
 	private PatientDetailMapper patientDetailDao;
 
-//	@Autowired
-//	private UserMapper userDao;
+	@Autowired
+	private UserMapper userDao;
 
 	public boolean addPatientDetail(PatientDetail detail) {
 
@@ -28,15 +30,29 @@ public class PatientDetailService {
 			try {
 				patientDetailDao.addPatientDetail(detail);
 				// 更新用户的状态
-//				User user = userDao.getUserByMacAddress(detail.getMacAddress());
-//				user.setFlag(false);
-//				userDao.updateUser(user);
+				//				User user = userDao.getUserByMacAddress(detail.getMacAddress());
+				//				user.setFlag(false);
+				//				userDao.updateUser(user);
 				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}
 		}
+		List<PatientDetail> patientList = patientDetailDao.getAllPatientDetail();
+		if (null != patientList && patientList.size() > 0) {
+			System.out.println("==========上传感染病例数量=======");
+			OneNETDevice.pushRiskPeople("", patientList);
+		}
+		List<String> deviceIdList = new ArrayList<>();
+		for (PatientDetail details : patientList) {
+			deviceIdList.add(userDao.getUserByMacAddress(details.getMacAddress()).getDeviceid());
+		}
+		if(deviceIdList.size()>0){
+			OneNETDevice.pushDeviceIdList("",deviceIdList);
+		}
+
+
 		return false;
 	}
 

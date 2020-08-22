@@ -25,7 +25,7 @@ public class ReportInfoService {
             String macAddress = reportInfoList.get(0).getMacaddress();
             String deviceId = userDao.getDeviceIdOfUser(macAddress);
             if (null != deviceId) {
-                OneNETDevice.pushReportInfo(deviceId, reportInfoList);
+//                OneNETDevice.pushReportInfo(deviceId, reportInfoList);
             }
         }
 

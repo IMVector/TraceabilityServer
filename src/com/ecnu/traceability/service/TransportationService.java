@@ -27,7 +27,7 @@ public class TransportationService extends JudgeIsPushed {
         if (null != tranportationInfoList && tranportationInfoList.size() > 0) {
             String deviceId = userDao.getDeviceIdOfUser(tranportationInfoList.get(0).getMacaddress());
             if (null != deviceId) {
-                OneNETDevice.pushTransportInfo(deviceId, tranportationInfoList);
+//                OneNETDevice.pushTransportInfo(deviceId, tranportationInfoList);
             }
         }
 

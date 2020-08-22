@@ -27,7 +27,7 @@ public class OneNETService {
             for (Map.Entry entry : realTimeLocationMap.entrySet()) {
                 array.add(entry.getValue());
             }
-            OneNETDevice.pushRealTimeLocation("598576209", array);
+//            OneNETDevice.pushRealTimeLocation("598576209", array);
         }
     }
 

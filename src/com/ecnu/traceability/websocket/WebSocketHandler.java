@@ -33,7 +33,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             onlineNum++;
         }
 //        sessionList.add(session);
-        OneNETDevice.pushOnlineDeviceNum("598576209", onlineNum);
+//        OneNETDevice.pushOnlineDeviceNum("598576209", onlineNum);
 
     }
 
@@ -46,7 +46,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 onlineNum--;
         }
 //        sessionList.remove(session);
-        OneNETDevice.pushOnlineDeviceNum("598576209", onlineNum);
+//        OneNETDevice.pushOnlineDeviceNum("598576209", onlineNum);
     }
 
     @Override

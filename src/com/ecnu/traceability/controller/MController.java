@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.ecnu.traceability.entity.*;
+import com.ecnu.traceability.mapper.PatientDetailMapper;
+import com.ecnu.traceability.mapper.UserMapper;
 import com.ecnu.traceability.one_net.OneNETDevice;
 import com.ecnu.traceability.service.*;
 import com.ecnu.traceability.utils.Email;
@@ -58,9 +60,82 @@ public class MController {
     @Autowired
     private RelationshipService relationshipService;
 
-    @Autowired OneNETService oneNETService;
+    @Autowired
+    private OneNETService oneNETService;
+    @Autowired
+    private PatientDetailMapper patientDetailDao;
 
-    private boolean pushFlag = false;
+    @Autowired
+    private UserMapper userDao;
+
+    @Autowired
+    private IsolateStateService isolateStateService;
+
+    @Autowired
+    private IsolateStatisticService isolateStatisticService;
+
+    @Autowired
+    private DataMiningService dataMiningService;
+
+
+
+
+    @RequestMapping(value = "/testOneNet", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String testOneNET() throws IOException, InterruptedException {
+        List<PatientDetail> patientList = patientDetailDao.getAllPatientDetail();
+        if (null != patientList && patientList.size() > 0) {
+            System.out.println("==========上传感染病例数量=======");
+            OneNETDevice.pushRiskPeople("", patientList);
+        }
+        List<String> deviceIdList = new ArrayList<>();
+        for (PatientDetail detail : patientList) {
+            deviceIdList.add(userDao.getUserByMacAddress(detail.getMacAddress()).getDeviceid());
+        }
+        if(deviceIdList.size()>0){
+            OneNETDevice.pushDeviceIdList("",deviceIdList);
+        }
+        return "发送请求";
+    }
+
+    @RequestMapping(value = "/testIsolate", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public int testisolate() throws IOException, InterruptedException {
+
+        return isolateStateService.getIsolateNum();
+    }
+
+    @RequestMapping(value = "/testDataMining", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String testDataMining() throws Exception {
+        dataMiningService.cluster();
+        return "完成";
+    }
+    @RequestMapping(value = "/testMap", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String testMap() throws Exception {
+        dataMiningService.showOnMap();
+        return "完成";
+    }
+
+
+
+
+    @RequestMapping(value = "/testNonIsolate", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public int testNonIsolate() throws IOException, InterruptedException {
+
+        return isolateStateService.getNoIsolateNum();
+    }
+    @RequestMapping(value = "/testMonthData", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public IsolateSatistic testMonthData() throws IOException, InterruptedException {
+
+        return isolateStatisticService.getlastItemData();
+    }
+
+
+
 
     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ResponseBody
@@ -92,6 +167,16 @@ public class MController {
         java.util.Date date = sdf.parse((String) models.get("date"));
 
         return patientDetailService.addPatientDetail(new PatientDetail(telphone, macAddress, flag, date));
+    }
+
+    @RequestMapping(value = "/addIsolateStates", method = RequestMethod.POST)
+    @ResponseBody
+    public boolean addIsolateStates( @RequestBody Map<String, Object> models) throws ParseException {
+        String deviceId= (String) models.get("deviceId");
+        String macAddress= (String) models.get("mac");
+        boolean state= (boolean) models.get("state");
+
+        return isolateStateService.addIsolateState(new IsolateState(deviceId,macAddress,state,new Date()));
     }
 
     // 向推送信息表添加已经推送的记录
@@ -160,7 +245,7 @@ public class MController {
         String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
         if (null != deviceId) {
             try {
-                OneNETDevice.pushPieChartData(deviceId, json.getJSONArray("datastreams"));
+//                OneNETDevice.pushPieChartData(deviceId, json.getJSONArray("datastreams"));
                 return true;
 
             } catch (Exception e) {
@@ -177,7 +262,7 @@ public class MController {
         String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
         if (null != deviceId) {
             try {
-                OneNETDevice.pushBarChartData(deviceId, json.getJSONArray("datastreams"));
+//                OneNETDevice.pushBarChartData(deviceId, json.getJSONArray("datastreams"));
                 return true;
 
             } catch (Exception e) {
@@ -193,15 +278,14 @@ public class MController {
     public boolean addRealtimeLocation(@RequestBody JSONObject json) {
         String deviceId = userService.getDeviceIdByMacAddress(json.getString("macAddress"));
         if (null != deviceId) {
-           JSONObject obj= json.getJSONObject("datastreams");
-            oneNETService.addLocation(deviceId,obj);
+            JSONObject obj = json.getJSONObject("datastreams");
+//            oneNETService.addLocation(deviceId,obj);
             //  OneNETDevice.pushRealTimeLocation(deviceId, json.getJSONArray("datastreams"));
 //            realTimeLocationMap.put(deviceId, json.getJSONObject("datastreams"));
             return true;
         }
         return false;
     }
-
 
 
     // 测试

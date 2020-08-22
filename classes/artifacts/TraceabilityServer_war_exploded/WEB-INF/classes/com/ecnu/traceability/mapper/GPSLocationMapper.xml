@@ -22,6 +22,14 @@
 		WHERE MacAddress = #{macAddress}
 	</select>
 
+
+	<select id="getGPSLocationList"
+			parameterType="java.lang.String" resultMap="LocationInfoResultMap"
+			resultType="com.ecnu.traceability.entity.LocationInfo">
+		SELECT *
+		FROM locationinfo
+	</select>
+
 	<insert id="addGPSLocation"
 		parameterType="com.ecnu.traceability.entity.LocationInfo">
 		insert into locationinfo

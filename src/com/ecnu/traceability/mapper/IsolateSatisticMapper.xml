@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+        namespace="com.ecnu.traceability.mapper.IsolateSatisticMapper">
+    <resultMap id="IsolateStatisticResultMap"
+               type="com.ecnu.traceability.entity.IsolateSatistic">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+
+        <result column="Jan_in" property="jan_in"/>
+        <result column="Jan_out" property="jan_out"/>
+
+        <result column="Feb_in" property="feb_in"/>
+        <result column="Feb_out" property="feb_out"/>
+
+        <result column="Mar_in" property="mar_in"/>
+        <result column="Mar_out" property="mar_out"/>
+
+        <result column="Apri_in" property="apri_in"/>
+        <result column="Apri_out" property="apri_out"/>
+
+        <result column="May_in" property="may_in"/>
+        <result column="May_out" property="may_out"/>
+
+        <result column="June_in" property="june_in"/>
+        <result column="June_out" property="june_out"/>
+
+        <result column="July_in" property="july_in"/>
+        <result column="July_out" property="july_out"/>
+
+        <result column="Aug_in" property="aug_in"/>
+        <result column="Aug_out" property="aug_out"/>
+
+        <result column="Sep_in" property="sep_in"/>
+        <result column="Sep_out" property="sep_out"/>
+
+        <result column="Oct_in" property="oct_in"/>
+        <result column="Oct_out" property="oct_out"/>
+
+        <result column="Nov_in" property="nov_in"/>
+        <result column="Nov_out" property="nov_out"/>
+
+        <result column="Dec_in" property="dec_in"/>
+        <result column="Dec_out" property="dec_out"/>
+
+        <result column="Date" property="date"/>
+    </resultMap>
+
+
+    <select id="getLastItemData"
+            resultMap="IsolateStatisticResultMap"
+            resultType="com.ecnu.traceability.entity.IsolateSatistic">
+    		SELECT *
+    		FROM Isolate_month_statistic
+    		order by Date desc LIMIT 1
+    </select>
+
+    <insert id="addIsolateSatistic"
+            parameterType="com.ecnu.traceability.entity.IsolateSatistic">
+		insert into Isolate_month_statistic
+		(Id,Jan_in, Jan_out, Feb_in, Feb_out, Mar_in, Mar_out, Apri_in, Apri_out, May_in, May_out, June_in, June_out,
+July_in, July_out, Aug_in, Aug_out, Sep_in, Sep_out, Oct_in, Oct_out, Nov_in, Nov_out, Dec_in, Dec_out,Date)
+		values (#{id},
+#{jan_in}, #{jan_out}, #{feb_in}, #{feb_out},#{ mar_in}, #{mar_out}, #{apri_in}, #{apri_out},
+#{may_in}, #{may_out}, #{june_in}, #{june_out},
+#{july_in}, #{july_out}, #{aug_in}, #{aug_out}, #{sep_in}, #{sep_out}, #{oct_in},
+${oct_out}, #{nov_in}, #{nov_out}, #{dec_in}, #{dec_out},#{date})
+	</insert>
+
+    <update id="updateIsolateSatistic"
+            parameterType="com.ecnu.traceability.entity.IsolateSatistic">
+		update Isolate_month_statistic set
+		 Jan_in = #{jan_in}, Jan_out = #{jan_out},
+		Feb_in =#{feb_in}, Feb_out =#{feb_out},
+		Mar_in = #{ mar_in}, Mar_out = #{mar_out},
+		Apri_in = #{apri_in}, Apri_out = #{apri_out},
+		 May_in = #{may_in}, May_out = #{may_out},
+		June_in = #{june_in}, June_out = #{june_out},
+        July_in = #{july_in}, July_out = #{july_out},
+        Aug_in = #{aug_in}, Aug_out = #{aug_out},
+        Sep_in =  #{sep_in},Sep_out = #{sep_out},
+        Oct_in = #{oct_in}, Oct_out = ${oct_out},
+         Nov_in = #{nov_in}, Nov_out = #{nov_out},
+         Dec_in = #{dec_in},Dec_out = #{dec_out},Date=#{date}
+        where Id=#{id}
+	</update>
+
+
+</mapper>

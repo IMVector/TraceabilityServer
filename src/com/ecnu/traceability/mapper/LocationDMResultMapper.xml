@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ecnu.traceability.mapper.LocationDMResultMapper">
+    <resultMap id="LocationDMResultMap" type="com.ecnu.traceability.entity.LocationDataMiningResult">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="Lat" property="lat"/>
+        <result column="Lon" property="lon"/>
+        <result column="Date" property="date"/>
+        <result column="Batch" property="batch"/>
+        <result column="Type" property="type"/>
+    </resultMap>
+
+    <delete id="deleteAllData">
+        delete* from Location_data_mining_result
+    </delete>
+
+    <select id="getAllCenterResultList" resultMap="LocationDMResultMap"
+            resultType="com.ecnu.traceability.entity.LocationDataMiningResult">
+		SELECT *
+		FROM Location_data_mining_result where Type='center'
+	</select>
+    <select id="getAllResultList" resultMap="LocationDMResultMap"
+            resultType="com.ecnu.traceability.entity.LocationDataMiningResult">
+		SELECT *
+		FROM Location_data_mining_result where Type='result'
+	</select>
+
+    <insert id="addData"
+            parameterType="com.ecnu.traceability.entity.LocationDataMiningResult">
+		insert into Location_data_mining_result(Id, Lat, Lon, Date, Batch,Type)
+		values (#{id}, #{lat}, #{lon}, #{date},#{batch},#{type})
+	</insert>
+
+    <select id="getMaxBatch" resultType="java.lang.Integer">
+       select Batch from Location_data_mining_result
+       order by Batch desc LIMIT 1
+    </select>
+
+    <select id="getCenterResultByBatch" resultMap="LocationDMResultMap" parameterType="java.lang.Integer">
+       select * from Location_data_mining_result
+       where Batch=#{batch} and type='center'
+    </select>
+
+    <select id="getResultByBatch" resultMap="LocationDMResultMap" parameterType="java.lang.Integer">
+       select * from Location_data_mining_result
+       where Batch=#{batch} and type='result'
+    </select>
+
+    <!--    <update id="updateIsolateState"-->
+    <!--            parameterType="com.ecnu.traceability.entity.IsolateState">-->
+    <!--		update IsolateState set State=#{state} where Id=#{id}-->
+    <!--	</update>-->
+
+
+</mapper>

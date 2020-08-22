@@ -9,6 +9,7 @@ import cmcc.iot.onenet.javasdk.response.BasicResponse;
 import cmcc.iot.onenet.javasdk.response.device.NewDeviceResponse;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ecnu.traceability.service.OneNETService;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -164,4 +165,98 @@ public class OneNETDevice {
         }
 
     }
+
+    public static void pushRiskPeople(String deviceId,Object json) {
+        List<Datapoints> list = new ArrayList<Datapoints>();
+        List<Data> dataList = new ArrayList<Data>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataList.add(new Data("", json));
+        list.add(new Datapoints("infection_count", dataList));
+        Map<String, List<Datapoints>> map = new HashMap<String, List<Datapoints>>();
+
+        map.put("datastreams", list);
+        try{
+            AddDatapointsApi api = new AddDatapointsApi(map, null, null, "619900399", "dWkW7tJtWTeM0xOaR4Dh5x8mn8U=");
+            BasicResponse<Void> response = api.executeApi();
+            System.out.println("errno:" + response.errno + " error:" + response.error);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public static void pushDeviceIdList(String deviceId,Object json) {
+        List<Datapoints> list = new ArrayList<Datapoints>();
+        List<Data> dataList = new ArrayList<Data>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataList.add(new Data("", json));
+        list.add(new Datapoints("patient_device_ids", dataList));
+        Map<String, List<Datapoints>> map = new HashMap<String, List<Datapoints>>();
+
+        map.put("datastreams", list);
+        try{
+            AddDatapointsApi api = new AddDatapointsApi(map, null, null, "619900399", "dWkW7tJtWTeM0xOaR4Dh5x8mn8U=");
+            BasicResponse<Void> response = api.executeApi();
+            System.out.println("errno:" + response.errno + " error:" + response.error);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void pushIsolateNum(Object json){
+        List<Datapoints> list = new ArrayList<Datapoints>();
+        List<Data> dataList = new ArrayList<Data>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataList.add(new Data("", json));
+        list.add(new Datapoints("isolate_num", dataList));
+        Map<String, List<Datapoints>> map = new HashMap<String, List<Datapoints>>();
+
+        map.put("datastreams", list);
+        try{
+            AddDatapointsApi api = new AddDatapointsApi(map, null, null, "619900399", "dWkW7tJtWTeM0xOaR4Dh5x8mn8U=");
+            BasicResponse<Void> response = api.executeApi();
+            System.out.println("errno:" + response.errno + " error:" + response.error);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void pushNoIsolateNum(Object json){
+        List<Datapoints> list = new ArrayList<Datapoints>();
+        List<Data> dataList = new ArrayList<Data>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataList.add(new Data("", json));
+        list.add(new Datapoints("non_isolate_num", dataList));
+        Map<String, List<Datapoints>> map = new HashMap<String, List<Datapoints>>();
+
+        map.put("datastreams", list);
+        try{
+            AddDatapointsApi api = new AddDatapointsApi(map, null, null, "619900399", "dWkW7tJtWTeM0xOaR4Dh5x8mn8U=");
+            BasicResponse<Void> response = api.executeApi();
+            System.out.println("errno:" + response.errno + " error:" + response.error);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void pushIsolateMonthData(Object json){
+        List<Datapoints> list = new ArrayList<Datapoints>();
+        List<Data> dataList = new ArrayList<Data>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataList.add(new Data("", json));
+        list.add(new Datapoints("isolate_month_data", dataList));
+        Map<String, List<Datapoints>> map = new HashMap<String, List<Datapoints>>();
+
+        map.put("datastreams", list);
+        try{
+            AddDatapointsApi api = new AddDatapointsApi(map, null, null, "619900399", "dWkW7tJtWTeM0xOaR4Dh5x8mn8U=");
+            BasicResponse<Void> response = api.executeApi();
+            System.out.println("errno:" + response.errno + " error:" + response.error);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

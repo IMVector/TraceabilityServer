@@ -19,4 +19,6 @@ public interface PatientDetailMapper {
 	
 	public void updatePatientDetail(PatientDetail detail);
 
+	public List<PatientDetail>getAllPatientDetail();
+
 }

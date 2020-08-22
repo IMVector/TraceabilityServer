@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+        namespace="com.ecnu.traceability.mapper.IsolateStatesMapper">
+    <resultMap id="IsolateStateResultMap"
+               type="com.ecnu.traceability.entity.IsolateState">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="DeviceId" property="deviceId"/>
+        <result column="Mac" property="mac"/>
+        <result column="State" property="state"/>
+        <result column="Date" property="date"/>
+    </resultMap>
+
+    <select id="getIsolateList" resultMap="IsolateStateResultMap"
+            resultType="com.ecnu.traceability.entity.IsolateState">
+		SELECT *
+		FROM IsolateState
+		WHERE state = '1'
+	</select>
+	<select id="getNoIsolateList" resultMap="IsolateStateResultMap"
+            resultType="com.ecnu.traceability.entity.IsolateState">
+		SELECT *
+		FROM IsolateState
+		WHERE state = '0'
+	</select>
+    <select id="getIsolateStateByMac"
+            parameterType="java.lang.String" resultMap="IsolateStateResultMap"
+            resultType="com.ecnu.traceability.entity.IsolateState">
+		SELECT *
+		FROM IsolateState
+		WHERE Mac = #{mac} LIMIT 1
+	</select>
+
+    <insert id="addIsolateState"
+            parameterType="com.ecnu.traceability.entity.IsolateState">
+		insert into IsolateState
+		(Id, DeviceId, Mac,State,Date)
+		values (#{id}, #{deviceId}, #{mac}, #{state},#{date})
+	</insert>
+
+    <update id="updateIsolateState"
+            parameterType="com.ecnu.traceability.entity.IsolateState">
+		update IsolateState set State=#{state} where Id=#{id}
+	</update>
+
+
+</mapper>

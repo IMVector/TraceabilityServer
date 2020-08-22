@@ -38,8 +38,8 @@
 
     </script>
 </head>
-<body>
-<div id="main" style="width: 1536px;height: 900px;"></div>
+<body style="background-color: #0B1532">
+<div id="main" style="width: 1536px;height: 900px;margin: 0 auto;background-color: #ffffff;border: 1px solid #0E5CAD;border-radius: 10px;"></div>
 
 </body>
 </html>
